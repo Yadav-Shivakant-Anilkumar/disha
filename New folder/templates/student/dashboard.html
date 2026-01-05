@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Student Dashboard</h1>
+
+<!-- Statistics -->
+<div class="grid grid-4 mb-3">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_courses }}</div>
+        <div class="stat-label">Enrolled Courses</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-value">₹{{ "%.2f"|format(stats.total_fees) }}</div>
+        <div class="stat-label">Total Fees</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-value">₹{{ "%.2f"|format(stats.paid_amount) }}</div>
+        <div class="stat-label">Paid Amount</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="stat-value">₹{{ "%.2f"|format(stats.due_amount) }}</div>
+        <div class="stat-label">Due Amount</div>
+    </div>
+</div>
+
+<!-- My Courses -->
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="d-flex justify-between align-center">
+            <h3>📚 My Courses</h3>
+            <a href="{{ url_for('student.enroll') }}" class="btn btn-primary btn-sm">Enroll in New Course</a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if enrollments %}
+        <div class="grid grid-2">
+            {% for enrollment in enrollments %}
+            <div class="card" style="margin: 0; border-left: 4px solid var(--success);">
+                <h4>{{ enrollment.course_name }}</h4>
+                <p><strong>Batch:</strong> {{ enrollment.batch_name }}</p>
+                <p><strong>Schedule:</strong> {{ enrollment.schedule }}</p>
+                <p><strong>Timing:</strong> {{ enrollment.timing }}</p>
+                <p><strong>Start Date:</strong> {{ enrollment.start_date }}</p>
+                <span class="badge badge-{{ enrollment.status == 'active' and 'success' or 'warning' }}">
+                    {{ enrollment.status }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center">No enrollments yet. <a href="{{ url_for('student.enroll') }}">Enroll in a
+                course</a></p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Recent Attendance -->
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-between align-center">
+            <h3>✅ Recent Attendance</h3>
+            <a href="{{ url_for('student.attendance') }}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if recent_attendance %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Course</th>
+                    <th>Batch</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in recent_attendance %}
+                <tr>
+                    <td>{{ record.attendance_date }}</td>
+                    <td>{{ record.course_name }}</td>
+                    <td>{{ record.batch_name }}</td>
+                    <td>
+                        <span
+                            class="badge badge-{{ record.status == 'present' and 'success' or (record.status == 'late' and 'warning' or 'danger') }}">
+                            {{ record.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted text-center">No attendance records yet</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

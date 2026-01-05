@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Disha Computer Classes{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('visitor.home') }}" class="navbar-brand">
+                🎓 Disha Computer Classes
+            </a>
+            <ul class="navbar-menu">
+                {% if session.user_id %}
+                    <!-- Authenticated User Menu -->
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    
+                    {% if session.role == 'admin' %}
+                        <li><a href="{{ url_for('admin.manage_students') }}">Students</a></li>
+                        <li><a href="{{ url_for('admin.manage_teachers') }}">Teachers</a></li>
+                        <li><a href="{{ url_for('admin.manage_courses') }}">Courses</a></li>
+                        <li><a href="{{ url_for('admin.reports') }}">Reports</a></li>
+                    {% elif session.role == 'teacher' %}
+                        <li><a href="{{ url_for('teacher.batches') }}">My Batches</a></li>
+                        <li><a href="{{ url_for('teacher.attendance') }}">Attendance</a></li>
+                        <li><a href="{{ url_for('teacher.exams') }}">Exams</a></li>
+                    {% elif session.role == 'student' %}
+                        <li><a href="{{ url_for('student.courses') }}">My Courses</a></li>
+                        <li><a href="{{ url_for('student.attendance') }}">Attendance</a></li>
+                        <li><a href="{{ url_for('student.results') }}">Results</a></li>
+                        <li><a href="{{ url_for('student.fees') }}">Fees</a></li>
+                    {% endif %}
+                    
+                    <li><span style="color: var(--gray);">Welcome, {{ session.full_name }}</span></li>
+                    <li><a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm">Logout</a></li>
+                {% else %}
+                    <!-- Guest Menu -->
+                    <li><a href="{{ url_for('visitor.home') }}">Home</a></li>
+                    <li><a href="{{ url_for('visitor.about') }}">About</a></li>
+                    <li><a href="{{ url_for('visitor.courses') }}">Courses</a></li>
+                    <li><a href="{{ url_for('visitor.contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-sm">Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-sm">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mt-2">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Disha Computer Classes</h3>
+                    <p>Empowering students with quality computer education since 2010.</p>
+                    <p>Building careers through technology training.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="{{ url_for('visitor.about') }}">About Us</a>
+                    <a href="{{ url_for('visitor.courses') }}">Courses</a>
+                    <a href="{{ url_for('visitor.contact') }}">Contact</a>
+                    <a href="{{ url_for('auth.register') }}">Student Registration</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📍 123 Education Street, Tech City</p>
+                    <p>📞 +91 98765 43210</p>
+                    <p>✉️ info@dishacomputer.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Disha Computer Classes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Manage Courses - Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-between align-center mb-3">
+    <h1>Manage Courses</h1>
+    <a href="{{ url_for('admin.create_course') }}" class="btn btn-primary">Add New Course</a>
+</div>
+<div class="grid grid-3">
+    {% for course in courses %}
+    <div class="card">
+        <h4>{{ course.course_name }}</h4>
+        <p class="text-muted">{{ course.description[:100] }}...</p>
+        <p><strong>Code:</strong> {{ course.course_code }}</p>
+        <p><strong>Duration:</strong> {{ course.duration_months }} months</p>
+        <p><strong>Fees:</strong> ₹{{ course.fees }}</p>
+        <span class="badge badge-{{ course.level == 'beginner' and 'success' or 'warning' }}">{{ course.level }}</span>
+        <span class="badge badge-{{ course.status == 'active' and 'success' or 'danger' }}">{{ course.status }}</span>
+        <div class="mt-2">
+            <a href="{{ url_for('admin.edit_course', course_id=course.course_id) }}"
+                class="btn btn-sm btn-primary">Edit</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

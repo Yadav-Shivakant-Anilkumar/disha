@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Courses - Disha Computer Classes{% endblock %}
+{% block content %}
+<h1 class="text-center mb-3">Our Courses</h1>
+
+{% for category, course_list in categories.items() %}
+<div class="card mb-3">
+    <div class="card-header">
+        <h3>{{ category }}</h3>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-3">
+            {% for course in course_list %}
+            <div class="card">
+                <h4>{{ course.course_name }}</h4>
+                <p class="text-muted">{{ course.description[:100] }}...</p>
+                <p><strong>Duration:</strong> {{ course.duration_months }} months</p>
+                <p><strong>Fees:</strong> ₹{{ course.fees }}</p>
+                <div class="d-flex justify-between align-center">
+                    <span class="badge badge-{{ course.level == 'beginner' and 'success' or 'warning' }}">{{
+                        course.level }}</span>
+                    <span class="text-muted">{{ course.total_students or 0 }} students</span>
+                </div>
+                <a href="{{ url_for('visitor.course_detail', course_id=course.course_id) }}"
+                    class="btn btn-primary btn-sm mt-2">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

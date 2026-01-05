@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Manage Students - Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-between align-center mb-3">
+    <h1>Manage Students</h1>
+</div>
+<div class="card">
+    <div class="card-header">
+        <input type="text" id="tableSearch" class="form-control" placeholder="Search students..."
+            style="max-width: 300px;">
+    </div>
+    <div class="card-body">
+        <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>Enrollment No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Admission Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.enrollment_no }}</td>
+                    <td>{{ student.full_name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.contact }}</td>
+                    <td><span class="badge badge-{{ student.status == 'active' and 'success' or 'danger' }}">{{
+                            student.status }}</span></td>
+                    <td>{{ student.admission_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

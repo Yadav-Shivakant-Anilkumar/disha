@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance - Teacher{% endblock %}
+{% block content %}
+<h1 class="mb-3">Mark Attendance</h1>
+<div class="card">
+    <div class="card-body">
+        <form method="GET" class="mb-3">
+            <div class="grid grid-3">
+                <div class="form-group">
+                    <label class="form-label">Select Batch</label>
+                    <select name="batch_id" class="form-control form-select" onchange="this.form.submit()">
+                        <option value="">-- Select Batch --</option>
+                        {% for batch in batches %}
+                        <option value="{{ batch.batch_id }}" {% if selected_batch==batch.batch_id %}selected{% endif %}>
+                            {{ batch.batch_name }} - {{ batch.course_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" class="form-control" value="{{ selected_date }}"
+                        onchange="this.form.submit()">
+                </div>
+            </div>
+        </form>
+
+        {% if students %}
+        <form method="POST">
+            <input type="hidden" name="batch_id" value="{{ selected_batch }}">
+            <input type="hidden" name="attendance_date" value="{{ selected_date }}">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Enrollment No</th>
+                        <th>Student Name</th>
+                        <th>Present</th>
+                        <th>Absent</th>
+                        <th>Late</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.enrollment_no }}</td>
+                        <td>{{ student.full_name }}</td>
+                        <input type="hidden" name="student_ids" value="{{ student.student_id }}">
+                        <td><input type="radio" name="status_{{ student.student_id }}" value="present" {% if
+                                existing_attendance.get(student.student_id)=='present' %}checked{% endif %}></td>
+                        <td><input type="radio" name="status_{{ student.student_id }}" value="absent" {% if
+                                existing_attendance.get(student.student_id)=='absent' %}checked{% endif %}></td>
+                        <td><input type="radio" name="status_{{ student.student_id }}" value="late" {% if
+                                existing_attendance.get(student.student_id)=='late' %}checked{% endif %}></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn btn-primary">Save Attendance</button>
+        </form>
+        {% else %}
+        <p class="text-muted text-center">Select a batch to mark attendance</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
