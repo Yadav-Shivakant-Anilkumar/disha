@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Create Teacher - Admin{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('admin.manage_teachers') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Teachers
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Create New Teacher</h2>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>User Account Information</h4>
+                    <div class="form-group">
+                        <label for="username">Username <span class="text-danger">*</span></label>
+                        <input type="text" name="username" id="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password" id="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="full_name" id="full_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Teacher Information</h4>
+                    <div class="form-group">
+                        <label for="employee_id">Employee ID <span class="text-danger">*</span></label>
+                        <input type="text" name="employee_id" id="employee_id" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="qualification">Qualification</label>
+                        <input type="text" name="qualification" id="qualification" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" name="specialization" id="specialization" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="experience_years">Experience (Years)</label>
+                        <input type="number" name="experience_years" id="experience_years" class="form-control"
+                            value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <h4>Contact Information</h4>
+                    <div class="form-group">
+                        <label for="contact">Contact Number</label>
+                        <input type="text" name="contact" id="contact" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea name="address" id="address" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Additional Details</h4>
+                    <div class="form-group">
+                        <label for="joining_date">Joining Date</label>
+                        <input type="date" name="joining_date" id="joining_date" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Teacher
+                </button>
+                <a href="{{ url_for('admin.manage_teachers') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

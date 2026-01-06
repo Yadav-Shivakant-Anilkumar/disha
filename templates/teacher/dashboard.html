@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Teacher Dashboard</h1>
+
+<!-- Statistics -->
+<div class="grid grid-3 mb-3">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_batches }}</div>
+        <div class="stat-label">Total Batches</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-value">{{ stats.active_batches }}</div>
+        <div class="stat-label">Active Batches</div>
+    </div>
+    <div class="stat-card info">
+        <div class="stat-value">{{ stats.total_students }}</div>
+        <div class="stat-label">Total Students</div>
+    </div>
+</div>
+
+<!-- My Batches -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3>📚 My Batches</h3>
+    </div>
+    <div class="card-body">
+        {% if batches %}
+        <div class="grid grid-2">
+            {% for batch in batches %}
+            <div class="card" style="margin: 0; border-left: 4px solid var(--primary);">
+                <h4>{{ batch.course_name }}</h4>
+                <p><strong>Batch:</strong> {{ batch.batch_name }}</p>
+                <p><strong>Students:</strong> {{ batch.student_count }}</p>
+                <p><strong>Schedule:</strong> {{ batch.schedule }}</p>
+                <p><strong>Timing:</strong> {{ batch.timing }}</p>
+                <span class="badge badge-{{ batch.status == 'ongoing' and 'success' or 'warning' }}">{{ batch.status
+                    }}</span>
+                <div class="mt-2">
+                    <a href="{{ url_for('teacher.batch_students', batch_id=batch.batch_id) }}"
+                        class="btn btn-primary btn-sm">View Students</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center">No batches assigned yet</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Recent Attendance -->
+<div class="card">
+    <div class="card-header">
+        <h3>✅ Recent Attendance Records</h3>
+    </div>
+    <div class="card-body">
+        {% if recent_attendance %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Batch</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in recent_attendance %}
+                <tr>
+                    <td>{{ record.attendance_date }}</td>
+                    <td>{{ record.full_name }}</td>
+                    <td>{{ record.batch_name }}</td>
+                    <td>
+                        <span class="badge badge-{{ record.status == 'present' and 'success' or 'danger' }}">
+                            {{ record.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted text-center">No attendance records yet</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

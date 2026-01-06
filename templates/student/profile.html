@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>👤 My Profile</h1>
+</div>
+
+<div class="grid grid-3 gap-3">
+    <!-- Profile Information -->
+    <div class="card" style="grid-column: span 2; margin: 0; padding: var(--spacing-lg);">
+        <div class="card-header">
+            <h3 class="mb-0">📋 Personal Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="grid grid-2 gap-3">
+                <div>
+                    <label class="mb-1"><strong>Full Name:</strong></label>
+                    <p class="mb-0">{{ student.full_name }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Enrollment No:</strong></label>
+                    <p class="mb-0">{{ student.enrollment_no }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Email:</strong></label>
+                    <p class="mb-0">{{ student.email }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Username:</strong></label>
+                    <p class="mb-0">{{ student.username }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Date of Birth:</strong></label>
+                    <p class="mb-0">{{ student.dob or 'Not provided' }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Gender:</strong></label>
+                    <p class="mb-0">{{ student.gender or 'Not specified' }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Contact:</strong></label>
+                    <p class="mb-0">{{ student.contact or 'Not provided' }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1"><strong>Admission Date:</strong></label>
+                    <p class="mb-0">{{ student.admission_date or 'N/A' }}</p>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label class="mb-1"><strong>Address:</strong></label>
+                    <p class="mb-0">{{ student.address or 'Not provided' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Photo -->
+    <div class="card" style="margin: 0; padding: var(--spacing-lg);">
+        <div class="card-header">
+            <h3 class="mb-0">📸 Photo</h3>
+        </div>
+        <div class="card-body text-center">
+            {% if student.photo_path %}
+            <img src="{{ url_for('static', filename='uploads/' + student.photo_path) }}" alt="Profile Photo"
+                style="max-width: 100%; height: auto; border-radius: 8px;">
+            {% else %}
+            <div
+                style="width: 150px; height: 150px; margin: 0 auto; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                👤
+            </div>
+            <p class="text-muted mt-2 mb-0">No photo uploaded</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Guardian Information -->
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="mb-0">👨‍👩‍👧 Guardian Information</h3>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-3 gap-3">
+            <div>
+                <label class="mb-1"><strong>Guardian Name:</strong></label>
+                <p class="mb-0">{{ student.guardian_name or 'Not provided' }}</p>
+            </div>
+
+            <div>
+                <label class="mb-1"><strong>Guardian Contact:</strong></label>
+                <p class="mb-0">{{ student.guardian_contact or 'Not provided' }}</p>
+            </div>
+
+            <div>
+                <label class="mb-1"><strong>Guardian Email:</strong></label>
+                <p class="mb-0">{{ student.guardian_email or 'Not provided' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Actions -->
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="mb-0">⚙️ Account Settings</h3>
+    </div>
+    <div class="card-body">
+        <p class="text-muted mb-3">Manage your account settings and security</p>
+        <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-primary" onclick="alert('Edit profile functionality will be implemented')">
+                ✏️ Edit Profile
+            </button>
+            <button class="btn btn-outline" onclick="alert('Change password functionality will be implemented')">
+                🔒 Change Password
+            </button>
+            <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline">
+                🏠 Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-3">
+    <strong>ℹ️ Note:</strong> To update your profile information, please contact the administration office.
+</div>
+
+{% endblock %}

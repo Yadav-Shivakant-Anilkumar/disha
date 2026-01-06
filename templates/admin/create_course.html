@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Create Course - Admin{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('admin.manage_courses') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Courses
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Create New Course</h2>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Course Information</h4>
+                    <div class="form-group">
+                        <label for="course_code">Course Code <span class="text-danger">*</span></label>
+                        <input type="text" name="course_code" id="course_code" class="form-control" required>
+                        <small class="form-text text-muted">Unique identifier, e.g., WEB001, PY001</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="course_name">Course Name <span class="text-danger">*</span></label>
+                        <input type="text" name="course_name" id="course_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" name="category" id="category" class="form-control"
+                            placeholder="e.g., Programming, Design, Marketing">
+                    </div>
+                    <div class="form-group">
+                        <label for="level">Level <span class="text-danger">*</span></label>
+                        <select name="level" id="level" class="form-control" required>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Course Details</h4>
+                    <div class="form-group">
+                        <label for="duration_months">Duration (Months) <span class="text-danger">*</span></label>
+                        <input type="number" name="duration_months" id="duration_months" class="form-control" required
+                            min="1" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="fees">Fees (₹) <span class="text-danger">*</span></label>
+                        <input type="number" name="fees" id="fees" class="form-control" required min="0" step="0.01"
+                            value="5000">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="5"
+                            placeholder="Provide a detailed description of the course content, objectives, and benefits..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Course
+                </button>
+                <a href="{{ url_for('admin.manage_courses') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

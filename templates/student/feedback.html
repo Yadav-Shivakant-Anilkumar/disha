@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Feedback - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>💬 Feedback</h1>
+</div>
+
+<!-- Submit Feedback Form -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3 class="mb-2">✍️ Submit Feedback</h3>
+        <p class="text-muted mb-0">Your feedback helps us improve our services</p>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('student.feedback') }}">
+            <div class="form-group">
+                <label for="course_id">Course (Optional)</label>
+                <select name="course_id" id="course_id" class="form-control">
+                    <option value="">-- Select Course --</option>
+                    {% for course in enrolled_courses %}
+                    <option value="{{ course.course_id }}">{{ course.course_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="teacher_id">Teacher (Optional)</label>
+                <select name="teacher_id" id="teacher_id" class="form-control">
+                    <option value="">-- Select Teacher --</option>
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher.teacher_id }}">{{ teacher.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category *</label>
+                <select name="category" id="category" class="form-control" required>
+                    <option value="overall">Overall Experience</option>
+                    <option value="course_content">Course Content</option>
+                    <option value="teaching">Teaching Quality</option>
+                    <option value="facilities">Facilities</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="mb-2">Rating *</label>
+                <div class="rating-stars">
+                    <div class="mb-2">
+                        <input type="radio" name="rating" value="5" id="star5" required>
+                        <label for="star5">⭐⭐⭐⭐⭐ Excellent</label>
+                    </div>
+                    <div class="mb-2">
+                        <input type="radio" name="rating" value="4" id="star4">
+                        <label for="star4">⭐⭐⭐⭐ Good</label>
+                    </div>
+                    <div class="mb-2">
+                        <input type="radio" name="rating" value="3" id="star3">
+                        <label for="star3">⭐⭐⭐ Average</label>
+                    </div>
+                    <div class="mb-2">
+                        <input type="radio" name="rating" value="2" id="star2">
+                        <label for="star2">⭐⭐ Below Average</label>
+                    </div>
+                    <div class="mb-0">
+                        <input type="radio" name="rating" value="1" id="star1">
+                        <label for="star1">⭐ Poor</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comments">Comments *</label>
+                <textarea name="comments" id="comments" class="form-control" rows="5"
+                    placeholder="Share your thoughts, suggestions, or concerns..." required></textarea>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="d-flex align-center gap-2">
+                    <input type="checkbox" name="is_anonymous">
+                    <span>Submit anonymously</span>
+                </label>
+                <small class="text-muted">Your name will not be shown if you check this option</small>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">📤 Submit Feedback</button>
+                <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Previous Feedback -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">📋 My Previous Feedback</h3>
+    </div>
+    <div class="card-body">
+        {% if submitted_feedback %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Course</th>
+                        <th>Teacher</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fb in submitted_feedback %}
+                    <tr>
+                        <td>{{ fb.feedback_date.strftime('%Y-%m-%d') if fb.feedback_date else 'N/A' }}</td>
+                        <td>
+                            <span class="badge badge-info">{{ fb.category }}</span>
+                        </td>
+                        <td>{{ fb.course_name or '-' }}</td>
+                        <td>{{ fb.teacher_name or '-' }}</td>
+                        <td>
+                            {% for i in range(fb.rating) %}⭐{% endfor %}
+                        </td>
+                        <td>
+                            <span
+                                class="badge badge-{{ fb.status == 'resolved' and 'success' or (fb.status == 'reviewed' and 'warning' or 'secondary') }}">
+                                {{ fb.status }}
+                            </span>
+                        </td>
+                        <td>{{ fb.comments[:50] }}...</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center mb-0">You haven't submitted any feedback yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .rating-stars input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+
+    .rating-stars label {
+        cursor: pointer;
+        padding: 0.375rem 0.75rem;
+        display: inline-block;
+    }
+
+    .rating-stars input[type="radio"]:checked+label {
+        background-color: #e8f4f8;
+        border-radius: 4px;
+    }
+</style>
+
+{% endblock %}

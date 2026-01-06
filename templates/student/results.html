@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Results - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>📋 My Exam Results</h1>
+</div>
+
+<!-- Performance Overview -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3 class="mb-0">📊 Performance Overview</h3>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-3 gap-3">
+            <div class="stat-card">
+                <div class="stat-value">{{ exam_results|length }}</div>
+                <div class="stat-label">Total Exams</div>
+            </div>
+            <div class="stat-card {{ avg_percentage >= 60 and 'success' or 'warning' }}">
+                <div class="stat-value">{{ "%.1f"|format(avg_percentage) }}%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div
+                class="stat-card {{ (exam_results|selectattr('result_status', 'equalto', 'pass')|list|length / exam_results|length * 100) >= 80 and 'success' or 'warning' if exam_results else '' }}">
+                <div class="stat-value">{{ (exam_results|selectattr('result_status', 'equalto', 'pass')|list|length /
+                    exam_results|length * 100)|round(1) if exam_results else 0 }}%</div>
+                <div class="stat-label">Pass Rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Exam Results -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">🎯 Exam Results</h3>
+    </div>
+    <div class="card-body">
+        {% if exam_results %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Course</th>
+                        <th>Batch</th>
+                        <th>Exam Name</th>
+                        <th>Type</th>
+                        <th>Marks</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in exam_results %}
+                    <tr>
+                        <td>{{ result.exam_date }}</td>
+                        <td>{{ result.course_name }}</td>
+                        <td>{{ result.batch_name }}</td>
+                        <td>{{ result.exam_name }}</td>
+                        <td>
+                            <span class="badge badge-info">{{ result.exam_type }}</span>
+                        </td>
+                        <td>{{ result.marks_obtained }} / {{ result.total_marks }}</td>
+                        <td>
+                            {% set percentage = (result.marks_obtained / result.total_marks * 100)|round(1) %}
+                            <span
+                                class="badge badge-{{ percentage >= 75 and 'success' or (percentage >= 60 and 'warning' or 'danger') }}">
+                                {{ percentage }}%
+                            </span>
+                        </td>
+                        <td>{{ result.grade or '-' }}</td>
+                        <td>
+                            <span class="badge badge-{{ result.result_status == 'pass' and 'success' or 'danger' }}">
+                                {{ result.result_status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <p class="mb-2">📢 No exam results available yet.</p>
+            <p class="text-muted mb-0">Results will appear here once exams are graded.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if exam_results %}
+<!-- Performance Chart -->
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="mb-0">📈 Performance Trend</h3>
+    </div>
+    <div class="card-body">
+        <p class="text-muted mb-3">Your exam performance over time:</p>
+        <div class="performance-chart">
+            {% for result in exam_results[:10]|reverse %}
+            {% set percentage = (result.marks_obtained / result.total_marks * 100)|round(1) %}
+            <div class="chart-bar">
+                <div class="bar-fill"
+                    style="height: {{ percentage }}%; background-color: {{ percentage >= 75 and 'var(--success)' or (percentage >= 60 and 'var(--warning)' or 'var(--danger)') }};">
+                </div>
+                <div class="bar-label">{{ result.exam_name[:15] }}</div>
+                <div class="bar-value">{{ percentage }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .performance-chart {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        height: 300px;
+        padding: 1.25rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background: #f9f9f9;
+        gap: 0.5rem;
+    }
+
+    .chart-bar {
+        flex: 1;
+        margin: 0 0.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .bar-fill {
+        width: 100%;
+        max-width: 60px;
+        transition: height 0.3s ease;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .bar-label {
+        font-size: 0.75rem;
+        text-align: center;
+        margin-top: 0.5rem;
+        color: #666;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .bar-value {
+        font-size: 0.85rem;
+        font-weight: bold;
+        margin-top: 0.25rem;
+    }
+</style>
+
+{% endblock %}

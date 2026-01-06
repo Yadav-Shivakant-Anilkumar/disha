@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero fade-in">
+    <h1>Welcome to Disha Computer Classes 🎓</h1>
+    <p>Your Gateway to Digital Excellence and Professional IT Education</p>
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('visitor.courses') }}" class="btn btn-lg"
+            style="background: white; color: var(--primary); margin-right: 1rem;">
+            Explore Courses
+        </a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-lg"
+            style="border-color: white; color: white;">
+            Register Now
+        </a>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="grid grid-3 mb-3">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total_students }}+</div>
+        <div class="stat-label">Students Enrolled</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-value">{{ stats.total_courses }}+</div>
+        <div class="stat-label">Courses Offered</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-value">{{ stats.total_teachers }}+</div>
+        <div class="stat-label">Expert Teachers</div>
+    </div>
+</div>
+
+<!-- Featured Courses -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">📚 Featured Courses</h2>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-3">
+            {% for course in featured_courses %}
+            <div class="card" style="margin: 0;">
+                <h4>{{ course.course_name }}</h4>
+                <p class="text-muted">{{ course.description[:100] }}...</p>
+                <div class="d-flex justify-between align-center mt-2">
+                    <span
+                        class="badge badge-{{ course.level == 'beginner' and 'success' or (course.level == 'intermediate' and 'warning' or 'danger') }}">
+                        {{ course.level }}
+                    </span>
+                    <strong style="color: var(--primary);">₹{{ course.fees }}</strong>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">Duration: {{ course.duration_months }} months</small>
+                </div>
+                <a href="{{ url_for('visitor.course_detail', course_id=course.course_id) }}"
+                    class="btn btn-primary btn-sm" style="width: 100%; margin-top: 1rem;">
+                    View Details
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-3">
+            <a href="{{ url_for('visitor.courses') }}" class="btn btn-outline">View All Courses</a>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Batches -->
+{% if upcoming_batches %}
+<div class="card mt-3">
+    <div class="card-header">
+        <h2 class="card-title">🚀 Upcoming Batches</h2>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-2">
+            {% for batch in upcoming_batches %}
+            <div class="card" style="margin: 0; border-left: 4px solid var(--primary);">
+                <h4>{{ batch.course_name }}</h4>
+                <p><strong>Batch:</strong> {{ batch.batch_name }}</p>
+                <p><strong>Start Date:</strong> {{ batch.start_date }}</p>
+                <p><strong>Fees:</strong> ₹{{ batch.fees }}</p>
+                <p><strong>Available Seats:</strong> {{ batch.available_seats }}</p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-sm"
+                    style="width: 100%; margin-top: 1rem;">
+                    Enroll Now
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Why Choose Us -->
+<div class="card mt-3">
+    <div class="card-header">
+        <h2 class="card-title">🌟 Why Choose Disha Computer Classes?</h2>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-4">
+            <div class="text-center">
+                <div style="font-size: 3rem;">👨‍🏫</div>
+                <h5>Expert Faculty</h5>
+                <p class="text-muted">Learn from industry professionals with years of experience</p>
+            </div>
+            <div class="text-center">
+                <div style="font-size: 3rem;">💻</div>
+                <h5>Hands-on Training</h5>
+                <p class="text-muted">Practical sessions with real-world projects</p>
+            </div>
+            <div class="text-center">
+                <div style="font-size: 3rem;">🎖️</div>
+                <h5>Certification</h5>
+                <p class="text-muted">Recognized certificates upon course completion</p>
+            </div>
+            <div class="text-center">
+                <div style="font-size: 3rem;">⏰</div>
+                <h5>Flexible Timing</h5>
+                <p class="text-muted">Multiple batch timings to suit your schedule</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

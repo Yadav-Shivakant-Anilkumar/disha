@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}View Teacher - {{ teacher.full_name }}{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('admin.manage_teachers') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Teachers
+    </a>
+    <a href="{{ url_for('admin.edit_teacher', teacher_id=teacher.teacher_id) }}" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Teacher
+    </a>
+</div>
+
+<div class="row">
+    <!-- Personal Information -->
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3><i class="fas fa-user"></i> Personal Information</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="40%">Full Name:</th>
+                        <td>{{ teacher.full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Employee ID:</th>
+                        <td><strong>{{ teacher.employee_id }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Username:</th>
+                        <td>{{ teacher.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ teacher.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Contact:</th>
+                        <td>{{ teacher.contact or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Address:</th>
+                        <td>{{ teacher.address or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <span class="badge badge-{{ teacher.status == 'active' and 'success' or 'danger' }}">
+                                {{ teacher.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Joining Date:</th>
+                        <td>{{ teacher.joining_date or 'N/A' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Information -->
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3><i class="fas fa-graduation-cap"></i> Professional Information</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="40%">Qualification:</th>
+                        <td>{{ teacher.qualification or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Specialization:</th>
+                        <td>{{ teacher.specialization or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Experience:</th>
+                        <td>{{ teacher.experience_years or 0 }} years</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assigned Batches -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3><i class="fas fa-chalkboard"></i> Assigned Batches</h3>
+    </div>
+    <div class="card-body">
+        {% if batches %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>Course</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Schedule</th>
+                        <th>Timing</th>
+                        <th>Max Students</th>
+                        <th>Current Students</th>
+                        <th>Status</th>
+                        <th>Classroom</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for batch in batches %}
+                    <tr>
+                        <td>{{ batch.batch_name }}</td>
+                        <td>{{ batch.course_name }} ({{ batch.course_code }})</td>
+                        <td>{{ batch.start_date }}</td>
+                        <td>{{ batch.end_date or 'Ongoing' }}</td>
+                        <td>{{ batch.schedule or 'N/A' }}</td>
+                        <td>{{ batch.timing or 'N/A' }}</td>
+                        <td>{{ batch.max_students }}</td>
+                        <td>{{ batch.current_students }}</td>
+                        <td>
+                            <span class="badge badge-{{ 
+                                batch.status == 'ongoing' and 'success' or 
+                                batch.status == 'upcoming' and 'info' or 
+                                'secondary' 
+                            }}">
+                                {{ batch.status }}
+                            </span>
+                        </td>
+                        <td>{{ batch.classroom or 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No batches assigned yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

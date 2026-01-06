@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Certificates - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>🎓 My Certificates</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">📜 Earned Certificates</h3>
+    </div>
+    <div class="card-body">
+        {% if certificates %}
+        <div class="grid grid-2 gap-3">
+            {% for cert in certificates %}
+            <div class="card" style="margin: 0; border-left: 4px solid var(--success); padding: var(--spacing-lg);">
+                <h4 class="mb-2">{{ cert.course_name }}</h4>
+                <p class="text-muted mb-3">Course Code: {{ cert.course_code }}</p>
+
+                <div class="mb-3">
+                    <p class="mb-2"><strong>📋 Certificate No:</strong> {{ cert.certificate_no }}</p>
+                    <p class="mb-2"><strong>📅 Issue Date:</strong> {{ cert.issue_date }}</p>
+                    <p class="mb-2"><strong>🏆 Grade:</strong>
+                        <span class="badge badge-success">{{ cert.grade or 'N/A' }}</span>
+                    </p>
+                    <p class="mb-2"><strong>✅ Issued By:</strong> {{ cert.issued_by_name }}</p>
+                    <p class="mb-0"><strong>🔐 Verification Code:</strong>
+                        <code style="background: #f0f0f0; padding: 0.25rem 0.5rem; border-radius: 4px;">
+                            {{ cert.verification_code }}
+                        </code>
+                    </p>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                    {% if cert.certificate_path %}
+                    <a href="{{ url_for('static', filename='uploads/' + cert.certificate_path) }}"
+                        class="btn btn-primary btn-sm" download target="_blank">
+                        📥 Download
+                    </a>
+                    {% else %}
+                    <button class="btn btn-secondary btn-sm" disabled>
+                        Not Available
+                    </button>
+                    {% endif %}
+
+                    <button class="btn btn-outline btn-sm" onclick="printCertificate('{{ cert.certificate_id }}')">
+                        🖨️ Print
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <h3 class="mb-3">🎓 No Certificates Yet</h3>
+            <p class="mb-3">Complete your courses to earn certificates!</p>
+            <p class="text-muted mb-3">Certificates are issued upon successful completion of courses.</p>
+            <a href="{{ url_for('student.courses') }}" class="btn btn-primary">View My Courses</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if certificates %}
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="mb-0">ℹ️ Certificate Information</h3>
+    </div>
+    <div class="card-body">
+        <ul style="padding-left: 1.5rem;">
+            <li class="mb-2">All certificates are digitally signed and can be verified using the verification code.</li>
+            <li class="mb-2">You can download your certificates in PDF format anytime.</li>
+            <li class="mb-2">Certificates can be shared with employers or educational institutions.</li>
+            <li class="mb-2">Keep your certificates safe for future reference.</li>
+            <li class="mb-0">For certificate verification, contact our administration with the verification code.</li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    function printCertificate(certId) {
+        alert('Print functionality for certificate ' + certId + ' will be implemented.');
+    }
+</script>
+
+{% endblock %}

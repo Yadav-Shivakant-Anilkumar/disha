@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Fee Payment - Student{% endblock %}
+{% block content %}
+<h1 class="mb-3">Fee Payment</h1>
+
+<!-- Fee Summary -->
+<div class="grid grid-3 mb-3">
+    {% for fee in fee_records %}
+    <div class="card">
+        <h4>{{ fee.course_name }}</h4>
+        <p><strong>Total Fees:</strong> ₹{{ fee.total_amount }}</p>
+        <p><strong>Paid:</strong> ₹{{ fee.paid_amount }}</p>
+        <p><strong>Due:</strong> ₹{{ fee.due_amount }}</p>
+        <span
+            class="badge badge-{{ fee.payment_status == 'paid' and 'success' or (fee.payment_status == 'partial' and 'warning' or 'danger') }}">
+            {{ fee.payment_status }}
+        </span>
+        {% if fee.due_amount > 0 %}
+        <a href="{{ url_for('student.pay_fee', fee_id=fee.fee_id) }}" class="btn btn-primary btn-sm mt-2">Pay Now</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Payment History -->
+<div class="card">
+    <div class="card-header">
+        <h3>💳 Payment History</h3>
+    </div>
+    <div class="card-body">
+        {% if transactions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Receipt No</th>
+                    <th>Course</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Method</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.receipt_no }}</td>
+                    <td>{{ transaction.course_name }}</td>
+                    <td>₹{{ transaction.amount }}</td>
+                    <td>{{ transaction.payment_date }}</td>
+                    <td><span class="badge badge-info">{{ transaction.payment_method }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted text-center">No payment history yet</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollment Details - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>📚 Enrollment Details</h1>
+</div>
+
+<!-- Course and Batch Information -->
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="d-flex justify-between align-center">
+            <h3 class="mb-0">{{ enrollment.course_name }}</h3>
+            <span
+                class="badge badge-{{ enrollment.status == 'active' and 'success' or (enrollment.status == 'completed' and 'info' or 'warning') }}">
+                {{ enrollment.status|upper }}
+            </span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-2 gap-3">
+            <div>
+                <h4 class="mb-2">Course Information</h4>
+                <p class="mb-3">{{ enrollment.description }}</p>
+                <p class="mb-2"><strong>⏳ Duration:</strong> {{ enrollment.duration_months }} months</p>
+                <p class="mb-0"><strong>💰 Fees:</strong> ₹{{ "%.2f"|format(enrollment.fees) }}</p>
+            </div>
+
+            <div>
+                <h4 class="mb-2">Batch Details</h4>
+                <p class="mb-2"><strong>🏷️ Batch:</strong> {{ enrollment.batch_name }}</p>
+                <p class="mb-2"><strong>📅 Start Date:</strong> {{ enrollment.start_date }}</p>
+                <p class="mb-2"><strong>📅 End Date:</strong> {{ enrollment.end_date or 'Ongoing' }}</p>
+                <p class="mb-2"><strong>⏰ Schedule:</strong> {{ enrollment.schedule }}</p>
+                <p class="mb-2"><strong>🕐 Timing:</strong> {{ enrollment.timing }}</p>
+                <p class="mb-2"><strong>🏫 Classroom:</strong> {{ enrollment.classroom or 'TBA' }}</p>
+                <p class="mb-0"><strong>📊 Batch Status:</strong>
+                    <span class="badge badge-{{ enrollment.batch_status == 'ongoing' and 'success' or 'info' }}">
+                        {{ enrollment.batch_status }}
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h4 class="mb-2">Teacher Information</h4>
+            <p class="mb-2"><strong>👨‍🏫 Name:</strong> {{ enrollment.teacher_name or 'To be assigned' }}</p>
+            {% if enrollment.teacher_contact %}
+            <p class="mb-0"><strong>📞 Contact:</strong> {{ enrollment.teacher_contact }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            <h4 class="mb-2">Enrollment Information</h4>
+            <p class="mb-2"><strong>📅 Enrollment Date:</strong> {{ enrollment.enrollment_date }}</p>
+            {% if enrollment.completion_date %}
+            <p class="mb-2"><strong>✅ Completion Date:</strong> {{ enrollment.completion_date }}</p>
+            {% endif %}
+            <p class="mb-2"><strong>📊 Completion Status:</strong>
+                <span
+                    class="badge badge-{{ enrollment.completion_status == 'passed' and 'success' or (enrollment.completion_status == 'in_progress' and 'info' or 'danger') }}">
+                    {{ enrollment.completion_status }}
+                </span>
+            </p>
+            {% if enrollment.final_grade %}
+            <p class="mb-2"><strong>🏆 Final Grade:</strong> {{ enrollment.final_grade }}</p>
+            {% endif %}
+            {% if enrollment.remarks %}
+            <p class="mb-0"><strong>📝 Remarks:</strong> {{ enrollment.remarks }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Summary -->
+<div class="grid grid-2 gap-3 mb-3">
+    <div class="card" style="margin: 0; padding: var(--spacing-lg);">
+        <div class="card-header">
+            <h3 class="mb-0">📊 Attendance Summary</h3>
+        </div>
+        <div class="card-body">
+            {% if attendance_summary and attendance_summary.total_classes > 0 %}
+            <div class="grid grid-3 gap-2 mb-3">
+                <div class="stat-card" style="padding: 1rem;">
+                    <div class="stat-value" style="font-size: 1.5rem;">{{ attendance_summary.total_classes }}</div>
+                    <div class="stat-label" style="font-size: 0.75rem;">Total Classes</div>
+                </div>
+                <div class="stat-card success" style="padding: 1rem;">
+                    <div class="stat-value" style="font-size: 1.5rem;">{{ attendance_summary.present_count or 0 }}</div>
+                    <div class="stat-label" style="font-size: 0.75rem;">Present</div>
+                </div>
+                <div class="stat-card danger" style="padding: 1rem;">
+                    <div class="stat-value" style="font-size: 1.5rem;">{{ attendance_summary.absent_count or 0 }}</div>
+                    <div class="stat-label" style="font-size: 0.75rem;">Absent</div>
+                </div>
+            </div>
+            {% set attendance_percentage = (attendance_summary.present_count / attendance_summary.total_classes * 100)
+            if attendance_summary.total_classes > 0 else 0 %}
+            <div class="progress-bar">
+                <div class="progress-fill"
+                    style="width: {{ attendance_percentage }}%; background-color: {{ attendance_percentage >= 75 and 'var(--success)' or 'var(--warning)' }};">
+                    {{ "%.1f"|format(attendance_percentage) }}%
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No attendance records yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Fee Information -->
+    <div class="card" style="margin: 0; padding: var(--spacing-lg);">
+        <div class="card-header">
+            <h3 class="mb-0">💰 Fee Information</h3>
+        </div>
+        <div class="card-body">
+            {% if fee_info %}
+            <div class="grid grid-3 gap-2 mb-3">
+                <div class="stat-card" style="padding: 1rem;">
+                    <div class="stat-value" style="font-size: 1.5rem;">₹{{ "%.2f"|format(fee_info.total_amount) }}</div>
+                    <div class="stat-label" style="font-size: 0.75rem;">Total Fee</div>
+                </div>
+                <div class="stat-card success" style="padding: 1rem;">
+                    <div class="stat-value" style="font-size: 1.5rem;">₹{{ "%.2f"|format(fee_info.paid_amount) }}</div>
+                    <div class="stat-label" style="font-size: 0.75rem;">Paid</div>
+                </div>
+                <div class="stat-card danger" style="padding: 1rem;">
+                    <div class="stat-value" style="font-size: 1.5rem;">₹{{ "%.2f"|format(fee_info.due_amount) }}</div>
+                    <div class="stat-label" style="font-size: 0.75rem;">Due</div>
+                </div>
+            </div>
+            <p class="mb-2">
+                <strong>Payment Status:</strong>
+                <span
+                    class="badge badge-{{ fee_info.payment_status == 'paid' and 'success' or (fee_info.payment_status == 'partial' and 'warning' or 'danger') }}">
+                    {{ fee_info.payment_status|upper }}
+                </span>
+            </p>
+            {% if fee_info.due_amount > 0 %}
+            <a href="{{ url_for('student.pay_fee', fee_id=fee_info.fee_id) }}" class="btn btn-primary btn-sm">
+                💳 Pay Now
+            </a>
+            {% endif %}
+            {% else %}
+            <p class="text-muted mb-0">No fee information available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Actions -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">⚙️ Actions</h3>
+    </div>
+    <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ url_for('student.courses') }}" class="btn btn-outline">← Back to My Courses</a>
+
+            {% if enrollment.status == 'active' %}
+            <form method="POST"
+                action="{{ url_for('student.cancel_enrollment', enrollment_id=enrollment.enrollment_id) }}"
+                style="display: inline-block;"
+                onsubmit="return confirm('Are you sure you want to cancel this enrollment? This action cannot be undone.');">
+                <button type="submit" class="btn btn-danger">
+                    ❌ Cancel Enrollment
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .progress-bar {
+        width: 100%;
+        height: 30px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        transition: width 0.3s ease;
+    }
+</style>
+
+{% endblock %}
