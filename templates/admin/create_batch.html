@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Create Batch - Admin{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('admin.manage_batches') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Batches
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Create New Batch</h2>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Batch Information</h4>
+                    <div class="form-group">
+                        <label for="batch_name">Batch Name <span class="text-danger">*</span></label>
+                        <input type="text" name="batch_name" id="batch_name" class="form-control" required
+                            placeholder="e.g., WEB-2024-JAN">
+                    </div>
+                    <div class="form-group">
+                        <label for="course_id">Course <span class="text-danger">*</span></label>
+                        <select name="course_id" id="course_id" class="form-control" required>
+                            <option value="">Select Course</option>
+                            {% for course in courses %}
+                            <option value="{{ course.course_id }}">{{ course.course_name }} ({{ course.course_code }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher_id">Assigned Teacher</label>
+                        <select name="teacher_id" id="teacher_id" class="form-control">
+                            <option value="">No Teacher Assigned</option>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.teacher_id }}">{{ teacher.full_name }}{% if teacher.specialization
+                                %} - {{ teacher.specialization }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="classroom">Classroom</label>
+                        <input type="text" name="classroom" id="classroom" class="form-control"
+                            placeholder="e.g., Room 101">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Schedule Details</h4>
+                    <div class="form-group">
+                        <label for="start_date">Start Date <span class="text-danger">*</span></label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control">
+                        <small class="form-text text-muted">Leave empty for ongoing batches</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule">Schedule</label>
+                        <input type="text" name="schedule" id="schedule" class="form-control"
+                            placeholder="e.g., Mon, Wed, Fri">
+                    </div>
+                    <div class="form-group">
+                        <label for="timing">Timing</label>
+                        <input type="text" name="timing" id="timing" class="form-control"
+                            placeholder="e.g., 10:00 AM - 12:00 PM">
+                    </div>
+                    <div class="form-group">
+                        <label for="max_students">Maximum Students</label>
+                        <input type="number" name="max_students" id="max_students" class="form-control" value="30"
+                            min="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Batch
+                </button>
+                <a href="{{ url_for('admin.manage_batches') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

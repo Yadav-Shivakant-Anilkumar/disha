@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}View Batch - {{ batch.batch_name }}{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('admin.manage_batches') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Batches
+    </a>
+    <a href="{{ url_for('admin.edit_batch', batch_id=batch.batch_id) }}" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Batch
+    </a>
+</div>
+
+<div class="row">
+    <!-- Batch Information -->
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3><i class="fas fa-chalkboard"></i> Batch Information</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="40%">Batch Name:</th>
+                        <td><strong>{{ batch.batch_name }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Course:</th>
+                        <td>{{ batch.course_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Assigned Teacher:</th>
+                        <td>{{ batch.teacher_name or 'Not Assigned' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Classroom:</th>
+                        <td>{{ batch.classroom or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <span class="badge badge-{{ 
+                                batch.status == 'ongoing' and 'success' or 
+                                batch.status == 'upcoming' and 'info' or 
+                                'secondary' 
+                            }}">
+                                {{ batch.status }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Information -->
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3><i class="fas fa-calendar-alt"></i> Schedule Information</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="40%">Start Date:</th>
+                        <td>{{ batch.start_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>End Date:</th>
+                        <td>{{ batch.end_date or 'Ongoing' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Schedule:</th>
+                        <td>{{ batch.schedule or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Timing:</th>
+                        <td>{{ batch.timing or 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Max Students:</th>
+                        <td>{{ batch.max_students }}</td>
+                    </tr>
+                    <tr>
+                        <th>Current Students:</th>
+                        <td><strong>{{ batch.current_students }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enrolled Students -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3><i class="fas fa-users"></i> Enrolled Students</h3>
+    </div>
+    <div class="card-body">
+        {% if enrollments %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Enrollment No</th>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Enrollment Date</th>
+                        <th>Status</th>
+                        <th>Completion Status</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>{{ enrollment.enrollment_no }}</td>
+                        <td>{{ enrollment.student_name }}</td>
+                        <td>{{ enrollment.email }}</td>
+                        <td>{{ enrollment.enrollment_date }}</td>
+                        <td>
+                            <span class="badge badge-{{ enrollment.status == 'active' and 'success' or 'secondary' }}">
+                                {{ enrollment.status }}
+                            </span>
+                        </td>
+                        <td>{{ enrollment.completion_status }}</td>
+                        <td>{{ enrollment.final_grade or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No students enrolled in this batch yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

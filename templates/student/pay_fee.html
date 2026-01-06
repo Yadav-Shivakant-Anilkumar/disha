@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Pay Fee - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>💳 Pay Fee</h1>
+</div>
+
+<div class="grid grid-2 gap-3">
+    <!-- Fee Details -->
+    <div class="card" style="margin: 0; padding: var(--spacing-lg);">
+        <div class="card-header">
+            <h3 class="mb-0">📋 Fee Details</h3>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-3">{{ fee.course_name }}</h4>
+
+            <div class="mb-3">
+                <div class="fee-detail-row">
+                    <span><strong>Total Amount:</strong></span>
+                    <span class="fee-amount">₹{{ "%.2f"|format(fee.total_amount) }}</span>
+                </div>
+
+                <div class="fee-detail-row success">
+                    <span><strong>Paid Amount:</strong></span>
+                    <span class="fee-amount">₹{{ "%.2f"|format(fee.paid_amount) }}</span>
+                </div>
+
+                <div class="fee-detail-row danger">
+                    <span><strong>Due Amount:</strong></span>
+                    <span class="fee-amount">₹{{ "%.2f"|format(fee.due_amount) }}</span>
+                </div>
+
+                {% if fee.discount_amount > 0 %}
+                <div class="fee-detail-row warning">
+                    <span><strong>Discount:</strong></span>
+                    <span class="fee-amount">-₹{{ "%.2f"|format(fee.discount_amount) }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="payment-status">
+                <strong>Payment Status:</strong>
+                <span
+                    class="badge badge-{{ fee.payment_status == 'paid' and 'success' or (fee.payment_status == 'partial' and 'warning' or 'danger') }}">
+                    {{ fee.payment_status|upper }}
+                </span>
+            </div>
+
+            {% if fee.due_date %}
+            <p class="text-muted mt-2 mb-0">
+                <strong>Due Date:</strong> {{ fee.due_date }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="card" style="margin: 0; padding: var(--spacing-lg);">
+        <div class="card-header">
+            <h3 class="mb-0">💰 Make Payment</h3>
+        </div>
+        <div class="card-body">
+            {% if fee.due_amount > 0 %}
+            <form method="POST" action="{{ url_for('student.pay_fee', fee_id=fee.fee_id) }}">
+                <div class="form-group">
+                    <label for="amount">Payment Amount *</label>
+                    <input type="number" name="amount" id="amount" class="form-control" step="0.01" min="0.01"
+                        max="{{ fee.due_amount }}" value="{{ fee.due_amount }}" required>
+                    <small class="text-muted">Maximum: ₹{{ "%.2f"|format(fee.due_amount) }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment_method">Payment Method *</label>
+                    <select name="payment_method" id="payment_method" class="form-control" required>
+                        <option value="cash">💵 Cash</option>
+                        <option value="upi">📱 UPI</option>
+                        <option value="card">💳 Card</option>
+                        <option value="netbanking">🏦 Net Banking</option>
+                        <option value="cheque">📝 Cheque</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="transaction_ref">Transaction Reference (Optional)</label>
+                    <input type="text" name="transaction_ref" id="transaction_ref" class="form-control"
+                        placeholder="UPI ID, Transaction ID, Cheque Number, etc.">
+                    <small class="text-muted">Enter transaction details for digital payments</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block mb-2">
+                    💳 Process Payment
+                </button>
+                <a href="{{ url_for('student.fees') }}" class="btn btn-outline btn-block">
+                    Cancel
+                </a>
+            </form>
+            {% else %}
+            <div class="alert alert-success text-center">
+                <h4 class="mb-2">✅ Fully Paid</h4>
+                <p class="mb-3">All fees for this course have been paid.</p>
+                <a href="{{ url_for('student.fees') }}" class="btn btn-primary">
+                    Back to Fees
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="mb-0">ℹ️ Payment Information</h3>
+    </div>
+    <div class="card-body">
+        <ul style="padding-left: 1.5rem;">
+            <li class="mb-2">You can make full or partial payments.</li>
+            <li class="mb-2">A receipt will be generated automatically after successful payment.</li>
+            <li class="mb-2">For online payments (UPI, Card, Net Banking), please enter the transaction reference.</li>
+            <li class="mb-2">For cash or cheque payments, please submit them at the office and then record the payment
+                here.</li>
+            <li class="mb-2">Keep your receipt safe for future reference.</li>
+            <li class="mb-0">Contact administration for any payment-related queries.</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .fee-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .fee-detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .fee-detail-row.success {
+        color: var(--success);
+    }
+
+    .fee-detail-row.danger {
+        color: var(--danger);
+    }
+
+    .fee-detail-row.warning {
+        color: var(--warning);
+    }
+
+    .fee-amount {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .payment-status {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 2px solid #e0e0e0;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Contact Us - Disha Computer Classes{% endblock %}
+{% block content %}
+<h1 class="text-center mb-3">Contact Us</h1>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3>Get in Touch</h3>
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Name*</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email*</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" name="phone">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Subject*</label>
+                <input type="text" class="form-control" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Message*</label>
+                <textarea class="form-control" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Send Message</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Contact Information</h3>
+        <div style="margin-top: 2rem;">
+            <p><strong>📍 Address:</strong></p>
+            <p class="text-muted">123 Education Street, Tech City, State - 123456</p>
+
+            <p style="margin-top: 1.5rem;"><strong>📞 Phone:</strong></p>
+            <p class="text-muted">+91 98765 43210</p>
+
+            <p style="margin-top: 1.5rem;"><strong>✉️ Email:</strong></p>
+            <p class="text-muted">info@dishacomputer.com</p>
+
+            <p style="margin-top: 1.5rem;"><strong>🕐 Office Hours:</strong></p>
+            <p class="text-muted">Monday - Saturday: 9:00 AM - 6:00 PM<br>Sunday: Closed</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

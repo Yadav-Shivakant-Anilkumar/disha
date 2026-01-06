@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Reports - Admin{% endblock %}
+{% block content %}
+<h1 class="mb-3">Reports & Analytics</h1>
+
+<!-- Fee Collection Summary -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3><i class="fas fa-money-bill-wave"></i> Fee Collection Summary</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; color: white; margin-bottom: 15px;">
+                    <h4 style="margin: 0; font-size: 14px; opacity: 0.9;">Total Fees</h4>
+                    <h2 style="margin: 10px 0; font-size: 32px; font-weight: bold;">₹{{ fee_summary.total_fees or 0 }}
+                    </h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card"
+                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 10px; color: white; margin-bottom: 15px;">
+                    <h4 style="margin: 0; font-size: 14px; opacity: 0.9;">Collected</h4>
+                    <h2 style="margin: 10px 0; font-size: 32px; font-weight: bold;">₹{{ fee_summary.collected or 0 }}
+                    </h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card"
+                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 20px; border-radius: 10px; color: white; margin-bottom: 15px;">
+                    <h4 style="margin: 0; font-size: 14px; opacity: 0.9;">Pending</h4>
+                    <h2 style="margin: 10px 0; font-size: 32px; font-weight: bold;">₹{{ fee_summary.pending or 0 }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enrollment Trends -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3><i class="fas fa-chart-line"></i> Enrollment Trends (Last 6 Months)</h3>
+    </div>
+    <div class="card-body">
+        {% if enrollment_trends %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Enrollments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trend in enrollment_trends %}
+                    <tr>
+                        <td>{{ trend.month }}</td>
+                        <td><strong>{{ trend.enrollments }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No enrollment data available for the last 6 months.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Course Popularity -->
+<div class="card mb-3">
+    <div class="card-header">
+        <h3><i class="fas fa-star"></i> Course Popularity</h3>
+    </div>
+    <div class="card-body">
+        {% if course_popularity %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Total Enrollments</th>
+                        <th>Popularity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in course_popularity %}
+                    <tr>
+                        <td>{{ course.course_name }}</td>
+                        <td><strong>{{ course.enrollment_count }}</strong></td>
+                        <td>
+                            <div style="background: #e0e0e0; border-radius: 5px; height: 20px; overflow: hidden;">
+                                <div
+                                    style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); height: 100%; width: {{ (course.enrollment_count / (course_popularity|map(attribute='enrollment_count')|max or 1) * 100)|round }}%;">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No course enrollment data available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x" style="color: #667eea;"></i>
+                <h3 class="mt-2">Students</h3>
+                <p class="text-muted">Active students enrolled</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-3x" style="color: #f093fb;"></i>
+                <h3 class="mt-2">Teachers</h3>
+                <p class="text-muted">Active teaching staff</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-3x" style="color: #fa709a;"></i>
+                <h3 class="mt-2">Courses</h3>
+                <p class="text-muted">Available courses</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-graduation-cap fa-3x" style="color: #84fab0;"></i>
+                <h3 class="mt-2">Batches</h3>
+                <p class="text-muted">Active batches running</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

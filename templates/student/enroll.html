@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Enroll in Course - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>📚 Enroll in New Course</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-2">Available Batches</h3>
+        <p class="text-muted mb-0">Select a batch to enroll in. You can only enroll in batches that have available
+            seats.</p>
+    </div>
+    <div class="card-body">
+        {% if batches %}
+        <div class="grid grid-2 gap-3">
+            {% for batch in batches %}
+            <div class="card" style="margin: 0; border-left: 4px solid var(--primary); padding: var(--spacing-lg);">
+                <form method="POST" action="{{ url_for('student.enroll') }}">
+                    <input type="hidden" name="batch_id" value="{{ batch.batch_id }}">
+
+                    <h4 class="mb-2">{{ batch.course_name }}</h4>
+                    <p class="text-muted mb-3">{{ batch.description }}</p>
+
+                    <div class="mb-3">
+                        <p class="mb-2"><strong>🏷️ Batch:</strong> {{ batch.batch_name }}</p>
+                        <p class="mb-2"><strong>👨‍🏫 Teacher:</strong> {{ batch.teacher_name or 'To be assigned' }}</p>
+                        <p class="mb-2"><strong>📅 Start Date:</strong> {{ batch.start_date }}</p>
+                        <p class="mb-2"><strong>⏰ Schedule:</strong> {{ batch.schedule }}</p>
+                        <p class="mb-2"><strong>🕐 Timing:</strong> {{ batch.timing }}</p>
+                        <p class="mb-2"><strong>⏳ Duration:</strong> {{ batch.duration_months }} months</p>
+                        <p class="mb-2"><strong>💰 Fees:</strong> ₹{{ "%.2f"|format(batch.fees) }}</p>
+                        <p class="mb-2"><strong>🪑 Available Seats:</strong>
+                            <span
+                                class="badge badge-{{ batch.available_seats > 5 and 'success' or (batch.available_seats > 0 and 'warning' or 'danger') }}">
+                                {{ batch.available_seats }} / {{ batch.max_students }}
+                            </span>
+                        </p>
+                        <p class="mb-0"><strong>📊 Status:</strong>
+                            <span class="badge badge-{{ batch.status == 'ongoing' and 'success' or 'info' }}">
+                                {{ batch.status }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="mt-3">
+                        {% if batch.available_seats > 0 %}
+                        <button type="submit" class="btn btn-primary btn-block">
+                            ✅ Enroll Now
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn btn-secondary btn-block" disabled>
+                            ❌ Batch Full
+                        </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <p class="mb-2">📢 No available batches at the moment. Please check back later or contact the
+                administration.</p>
+            <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline mt-2">Return to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if batches %}
+<div class="card mt-3">
+    <div class="card-header">
+        <h3 class="mb-0">ℹ️ Enrollment Information</h3>
+    </div>
+    <div class="card-body">
+        <ul style="padding-left: 1.5rem;">
+            <li class="mb-2">Once enrolled, you will have access to all course materials and resources.</li>
+            <li class="mb-2">Fee payment is required to maintain active enrollment status.</li>
+            <li class="mb-2">Attendance is mandatory as per course requirements.</li>
+            <li class="mb-2">You can view your enrollment details in the "My Courses" section.</li>
+            <li class="mb-0">For any issues or queries, please contact the administration.</li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

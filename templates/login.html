@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Disha Computer Classes{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 450px; margin-top: 3rem;">
+    <div class="card fade-in">
+        <div class="card-header text-center">
+            <h2>🔐 Login</h2>
+            <p class="text-muted">Welcome back! Please login to your account</p>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Login
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p class="text-muted">Don't have an account?
+                    <a href="{{ url_for('auth.register') }}">Register as Student</a>
+                </p>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <p class="text-muted" style="font-size: 0.875rem; text-align: center;">
+                    <strong>Demo Credentials:</strong><br>
+                    Admin: username: <code>admin</code>, password: <code>admin123</code>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
